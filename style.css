@@ -1,0 +1,340 @@
+/* Основные стили */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #333;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+    overflow: hidden;
+    padding: 25px;
+}
+
+/* Шапка */
+.header {
+    margin-bottom: 30px;
+}
+
+.header-top h1 {
+    font-size: 24px;
+    color: #2d3748;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-top h1 i {
+    color: #667eea;
+}
+
+.subtitle {
+    color: #718096;
+    font-size: 16px;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+/* Карточка бригады */
+.brigade-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    padding: 25px;
+    color: white;
+    margin-bottom: 25px;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+}
+
+.brigade-info {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    margin-bottom: 20px;
+}
+
+.brigade-avatar {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+}
+
+.person-row {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.person {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.person-role {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.person-name {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.brigade-stats {
+    display: flex;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-label {
+    font-size: 14px;
+    opacity: 0.9;
+    margin-bottom: 8px;
+}
+
+.stat-value {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+/* Календарь */
+.calendar {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.month-header {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0f0f0;
+    text-align: center;
+}
+
+.month-header h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #2d3748;
+    justify-content: center;
+}
+
+.days-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 15px;
+}
+
+.day-card {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    transition: all 0.3s;
+    cursor: pointer;
+    border: 2px solid transparent;
+    min-height: 90px;
+}
+
+.day-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.day-number {
+    font-size: 18px;
+    font-weight: bold;
+    color: #2d3748;
+    margin-bottom: 10px;
+}
+
+.day-yavka {
+    min-height: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.yavka-badge {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-bottom: 5px;
+}
+
+.yavka-badge:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+.day-status {
+    font-size: 12px;
+    color: #718096;
+    margin-top: 5px;
+}
+
+.day-card.weekend {
+    background: #fed7d7;
+}
+
+.day-card.weekend .day-number {
+    color: #c53030;
+}
+
+.day-card.empty .day-yavka {
+    color: #cbd5e0;
+    font-style: italic;
+}
+
+/* Детальная информация */
+.details-section {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 25px;
+    border: 1px solid #e2e8f0;
+}
+
+.yavka-detail-card {
+    background: white;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.detail-header {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0f0f0;
+    text-align: center;
+}
+
+.detail-title h4 {
+    font-size: 20px;
+    color: #2d3748;
+    margin: 0;
+}
+
+.detail-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.detail-group {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.detail-group h5 {
+    margin-bottom: 15px;
+    color: #4a5568;
+    font-size: 16px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    color: #718096;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.detail-value {
+    color: #2d3748;
+    font-weight: 600;
+    text-align: right;
+    font-size: 14px;
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+        border-radius: 15px;
+    }
+    
+    .person-row {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .days-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .header-top h1 {
+        font-size: 20px;
+    }
+    
+    .detail-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .days-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .day-card {
+        padding: 10px;
+        min-height: 80px;
+    }
+    
+    .yavka-badge {
+        padding: 6px 10px;
+        font-size: 14px;
+    }
+    
+    .person-name {
+        font-size: 20px;
+    }
+}
