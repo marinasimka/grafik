@@ -8,7 +8,7 @@
     <!-- PWA мета-теги -->
     <meta name="application-name" content="График работы">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="График">
     <meta name="description" content="График работы локомотивной бригады">
     <meta name="format-detection" content="telephone=no">
@@ -18,12 +18,11 @@
     <meta name="theme-color" content="#667eea">
     
     <!-- Manifest -->
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="manifest.json" crossorigin="use-credentials">
     
     <!-- Фавиконки -->
-    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="icons/icon-16x16.png">
-    <link rel="shortcut icon" href="icons/favicon.ico">
+    <link rel="icon" type="image/png" href="icons/icon-192x192.png">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
     
     <!-- Стили -->
     <link rel="stylesheet" href="style.css">
@@ -31,13 +30,18 @@
 </head>
 <body>
     <div class="container">
-        <!-- Шапка с кнопкой темы -->
+        <!-- Шапка с кнопкой темы и обновления -->
         <header class="header">
             <div class="header-top">
                 <h1><i class="fas fa-train"></i> График работы локомотивной бригады</h1>
-                <button class="theme-toggle" id="themeToggle" title="Переключить тему">
-                    <i class="fas fa-moon"></i>
-                </button>
+                <div class="header-buttons">
+                    <button class="theme-toggle" id="themeToggle" title="Переключить тему">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="update-btn" id="updateButton" title="Обновить приложение" style="display:none;">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
             </div>
             
             <div class="subtitle">ШТАДЛЕР</div>
@@ -94,8 +98,62 @@
     <script src="data.js"></script>
     <script src="script.js"></script>
     
-    <!-- Скрипт для переключения темы -->
+    <!-- Service Worker регистрация с обновлением -->
     <script>
+        // Регистрация Service Worker с контролем обновлений
+        if ('serviceWorker' in navigator) {
+            let newServiceWorker;
+            
+            navigator.serviceWorker.register('sw.js')
+                .then(registration => {
+                    console.log('Service Worker зарегистрирован:', registration.scope);
+                    
+                    // Слушаем обновления
+                    registration.addEventListener('updatefound', () => {
+                        newServiceWorker = registration.installing;
+                        console.log('Обнаружено обновление Service Worker');
+                        
+                        newServiceWorker.addEventListener('statechange', () => {
+                            if (newServiceWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                // Новый контент доступен
+                                console.log('Доступна новая версия приложения');
+                                showUpdateNotification();
+                            }
+                        });
+                    });
+                })
+                .catch(error => {
+                    console.log('Ошибка регистрации Service Worker:', error);
+                });
+            
+            // Проверка обновлений при загрузке
+            window.addEventListener('load', () => {
+                if (navigator.serviceWorker.controller) {
+                    navigator.serviceWorker.controller.postMessage({type: 'CHECK_UPDATE'});
+                }
+            });
+            
+            // Функция показа уведомления об обновлении
+            function showUpdateNotification() {
+                const updateButton = document.getElementById('updateButton');
+                updateButton.style.display = 'block';
+                updateButton.innerHTML = '<i class="fas fa-sync-alt"></i> Обновить';
+                
+                updateButton.onclick = () => {
+                    if (newServiceWorker) {
+                        newServiceWorker.postMessage({type: 'SKIP_WAITING'});
+                        updateButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Обновление...';
+                        updateButton.disabled = true;
+                        
+                        // Перезагружаем страницу после обновления
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1000);
+                    }
+                };
+            }
+        }
+        
         // Переключение темы
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = themeToggle.querySelector('i');
@@ -119,7 +177,7 @@
             }
         });
         
-        // Автоопределение темы
+        // Автоопределение темы системы
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches && !savedTheme) {
             document.body.classList.add('dark-theme');
             themeIcon.className = 'fas fa-sun';
