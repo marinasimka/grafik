@@ -6,23 +6,55 @@
     -webkit-tap-highlight-color: transparent;
 }
 
+:root {
+    /* Светлая тема (по умолчанию) */
+    --bg-primary: white;
+    --bg-secondary: #f8f9fa;
+    --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --text-primary: #333;
+    --text-secondary: #718096;
+    --card-bg: white;
+    --calendar-bg: white;
+    --details-bg: #f8f9fa;
+    --border-color: #e2e8f0;
+    --weekend-bg: #fed7d7;
+    --weekend-text: #c53030;
+}
+
+.dark-theme {
+    /* Тёмная тема */
+    --bg-primary: #1a202c;
+    --bg-secondary: #2d3748;
+    --bg-gradient: linear-gradient(135deg, #4c51bf 0%, #6b46c1 100%);
+    --text-primary: #e2e8f0;
+    --text-secondary: #a0aec0;
+    --card-bg: #2d3748;
+    --calendar-bg: #2d3748;
+    --details-bg: #4a5568;
+    --border-color: #4a5568;
+    --weekend-bg: #744210;
+    --weekend-text: #fbd38d;
+}
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: #333;
+    background: var(--bg-gradient);
+    color: var(--text-primary);
     line-height: 1.6;
     min-height: 100vh;
     padding: 20px;
+    transition: background 0.3s ease, color 0.3s ease;
 }
 
 .container {
     max-width: 1000px;
     margin: 0 auto;
-    background: white;
+    background: var(--bg-primary);
     border-radius: 20px;
     box-shadow: 0 20px 60px rgba(0,0,0,0.1);
     overflow: hidden;
     padding: 25px;
+    transition: background 0.3s ease;
 }
 
 /* Шапка */
@@ -30,10 +62,17 @@ body {
     margin-bottom: 30px;
 }
 
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
 .header-top h1 {
     font-size: 24px;
-    color: #2d3748;
-    margin-bottom: 10px;
+    color: var(--text-primary);
+    margin: 0;
     display: flex;
     align-items: center;
     gap: 15px;
@@ -44,15 +83,35 @@ body {
 }
 
 .subtitle {
-    color: #718096;
+    color: var(--text-secondary);
     font-size: 16px;
     margin-bottom: 25px;
     text-align: center;
 }
 
+/* Кнопка темы */
+.theme-toggle {
+    background: var(--bg-gradient);
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: all 0.3s;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+}
+
 /* Карточка бригады */
 .brigade-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--bg-gradient);
     border-radius: 15px;
     padding: 25px;
     color: white;
@@ -63,31 +122,23 @@ body {
 .brigade-info {
     display: flex;
     align-items: center;
-    gap: 25px;
-    margin-bottom: 20px;
-}
-
-.brigade-avatar {
-    width: 80px;
-    height: 80px;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
     justify-content: center;
-    font-size: 40px;
+    margin-bottom: 20px;
 }
 
 .person-row {
     display: flex;
     gap: 40px;
     flex-wrap: wrap;
+    justify-content: center;
 }
 
 .person {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    align-items: center;
+    text-align: center;
 }
 
 .person-role {
@@ -109,6 +160,7 @@ body {
     background: rgba(255, 255, 255, 0.1);
     border-radius: 12px;
     padding: 20px;
+    margin-top: 15px;
 }
 
 .stat-item {
@@ -128,17 +180,19 @@ body {
 
 /* Календарь */
 .calendar {
-    background: white;
+    background: var(--calendar-bg);
     border-radius: 15px;
     padding: 25px;
     margin-bottom: 30px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
 }
 
 .month-header {
     margin-bottom: 25px;
     padding-bottom: 15px;
-    border-bottom: 2px solid #f0f0f0;
+    border-bottom: 2px solid var(--border-color);
     text-align: center;
 }
 
@@ -146,7 +200,7 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-    color: #2d3748;
+    color: var(--text-primary);
     justify-content: center;
 }
 
@@ -157,7 +211,7 @@ body {
 }
 
 .day-card {
-    background: #f8f9fa;
+    background: var(--bg-secondary);
     border-radius: 10px;
     padding: 15px;
     text-align: center;
@@ -165,6 +219,7 @@ body {
     cursor: pointer;
     border: 2px solid transparent;
     min-height: 90px;
+    transition: all 0.3s ease;
 }
 
 .day-card:hover {
@@ -175,7 +230,7 @@ body {
 .day-number {
     font-size: 18px;
     font-weight: bold;
-    color: #2d3748;
+    color: var(--text-primary);
     margin-bottom: 10px;
 }
 
@@ -188,7 +243,7 @@ body {
 }
 
 .yavka-badge {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--bg-gradient);
     color: white;
     padding: 8px 12px;
     border-radius: 8px;
@@ -207,48 +262,50 @@ body {
 
 .day-status {
     font-size: 12px;
-    color: #718096;
+    color: var(--text-secondary);
     margin-top: 5px;
 }
 
 .day-card.weekend {
-    background: #fed7d7;
+    background: var(--weekend-bg);
 }
 
 .day-card.weekend .day-number {
-    color: #c53030;
+    color: var(--weekend-text);
 }
 
 .day-card.empty .day-yavka {
-    color: #cbd5e0;
+    color: var(--text-secondary);
     font-style: italic;
 }
 
 /* Детальная информация */
 .details-section {
-    background: #f8f9fa;
+    background: var(--details-bg);
     border-radius: 15px;
     padding: 25px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
 }
 
 .yavka-detail-card {
-    background: white;
+    background: var(--card-bg);
     border-radius: 10px;
     padding: 25px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
 }
 
 .detail-header {
     margin-bottom: 20px;
     padding-bottom: 15px;
-    border-bottom: 2px solid #f0f0f0;
+    border-bottom: 2px solid var(--border-color);
     text-align: center;
 }
 
 .detail-title h4 {
     font-size: 20px;
-    color: #2d3748;
+    color: var(--text-primary);
     margin: 0;
 }
 
@@ -259,14 +316,15 @@ body {
 }
 
 .detail-group {
-    background: #f8f9fa;
+    background: var(--bg-secondary);
     padding: 20px;
     border-radius: 8px;
+    transition: all 0.3s ease;
 }
 
 .detail-group h5 {
     margin-bottom: 15px;
-    color: #4a5568;
+    color: var(--text-primary);
     font-size: 16px;
 }
 
@@ -274,7 +332,7 @@ body {
     display: flex;
     justify-content: space-between;
     padding: 10px 0;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .detail-row:last-child {
@@ -282,13 +340,13 @@ body {
 }
 
 .detail-label {
-    color: #718096;
+    color: var(--text-secondary);
     font-weight: 500;
     font-size: 14px;
 }
 
 .detail-value {
-    color: #2d3748;
+    color: var(--text-primary);
     font-weight: 600;
     text-align: right;
     font-size: 14px;
@@ -300,20 +358,20 @@ body {
         padding: 15px;
         border-radius: 15px;
     }
-    
+   
     .person-row {
         flex-direction: column;
         gap: 20px;
     }
-    
+   
     .days-grid {
         grid-template-columns: repeat(4, 1fr);
     }
-    
+   
     .header-top h1 {
         font-size: 20px;
     }
-    
+   
     .detail-content {
         grid-template-columns: 1fr;
     }
@@ -323,17 +381,17 @@ body {
     .days-grid {
         grid-template-columns: repeat(3, 1fr);
     }
-    
+   
     .day-card {
         padding: 10px;
         min-height: 80px;
     }
-    
+   
     .yavka-badge {
         padding: 6px 10px;
         font-size: 14px;
     }
-    
+   
     .person-name {
         font-size: 20px;
     }
