@@ -3,9 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>График работы</title>
+    <title>График работы локомотивной бригады</title>
+    
+    <!-- PWA мета-теги -->
+    <meta name="application-name" content="График работы">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="График">
+    <meta name="description" content="График работы локомотивной бригады">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="msapplication-TileColor" content="#667eea">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="theme-color" content="#667eea">
+
+    <!-- CSS -->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Manifest -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Фавиконки -->
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
+    <link rel="shortcut icon" href="icons/favicon.ico">
+    
+    <!-- Ярлыки для iOS -->
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180x180.png">
+    
+    <!-- Splash screen для iOS -->
+    <link rel="apple-touch-startup-image" href="icons/apple-splash-2048-2732.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
 </head>
 <body>
     <div class="container">
@@ -18,9 +48,7 @@
             
             <div class="brigade-card">
                 <div class="brigade-info">
-                    <div class="brigade-avatar">
-                        <i class="fas fa-user-hard-hat"></i>
-                    </div>
+                    <!-- Кружок удален -->
                     <div class="brigade-details">
                         <div class="person-row">
                             <div class="person">
@@ -40,11 +68,13 @@
                         </div>
                     </div>
                 </div>
+                
                 <div class="brigade-stats">
                     <div class="stat-item">
                         <div class="stat-label">Всего часов</div>
                         <div class="stat-value">161.1</div>
                     </div>
+                    <!-- Место для дополнительной статистики -->
                 </div>
             </div>
         </header>
@@ -52,7 +82,12 @@
         <!-- Календарь дней -->
         <div class="calendar">
             <div class="month-header">
-                <h3><i class="fas fa-calendar-alt"></i> Февраль 2026</h3>
+                <h3>
+                    <i class="fas fa-chevron-left month-nav" onclick="changeMonth(-1)"></i>
+                    <i class="fas fa-calendar-alt"></i> 
+                    <span id="currentMonth">Февраль 2026</span>
+                    <i class="fas fa-chevron-right month-nav" onclick="changeMonth(1)"></i>
+                </h3>
             </div>
             
             <div class="days-grid" id="daysGrid">
@@ -64,10 +99,258 @@
         <div class="details-section" id="yavkaDetails">
             <!-- Информация появится при нажатии на явку -->
         </div>
+        
+        <!-- Дополнительные секции для будущих функций -->
+        <div class="features-section">
+            <div class="feature-card">
+                <h4><i class="fas fa-chart-line"></i> Статистика месяца</h4>
+                <div id="monthStats">
+                    <!-- Статистика будет загружена через JS -->
+                </div>
+            </div>
+            
+            <div class="feature-card">
+                <h4><i class="fas fa-cog"></i> Настройки</h4>
+                <div class="settings">
+                    <button class="theme-toggle" onclick="toggleTheme()">
+                        <i class="fas fa-moon"></i> Тёмная тема
+                    </button>
+                    <button class="export-btn" onclick="exportData()">
+                        <i class="fas fa-download"></i> Экспорт
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Информация о PWA -->
+        <div class="pwa-info">
+            <p><i class="fas fa-mobile-alt"></i> Установите это приложение на свой телефон для быстрого доступа</p>
+        </div>
     </div>
 
     <!-- Скрипты -->
     <script src="data.js"></script>
     <script src="script.js"></script>
+    
+    <!-- Service Worker и PWA функциональность -->
+    <script>
+        // Регистрация Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('sw.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker зарегистрирован: ', registration.scope);
+                        
+                        // Проверка обновлений
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            console.log('Найдено обновление ServiceWorker');
+                            
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // Новый контент доступен
+                                    showUpdateNotification();
+                                }
+                            });
+                        });
+                    })
+                    .catch(function(err) {
+                        console.log('Ошибка регистрации ServiceWorker: ', err);
+                    });
+            });
+        }
+
+        // Уведомление об обновлении
+        function showUpdateNotification() {
+            const notification = document.createElement('div');
+            notification.className = 'update-notification';
+            notification.innerHTML = `
+                <div class="update-content">
+                    <p><i class="fas fa-sync-alt"></i> Доступно обновление приложения</p>
+                    <button onclick="location.reload()">Обновить</button>
+                    <button onclick="this.parentElement.parentElement.remove()">Позже</button>
+                </div>
+            `;
+            notification.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                left: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 15px;
+                border-radius: 10px;
+                z-index: 1000;
+                box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            `;
+            
+            const updateContent = notification.querySelector('.update-content');
+            updateContent.style.display = 'flex';
+            updateContent.style.justifyContent = 'space-between';
+            updateContent.style.alignItems = 'center';
+            updateContent.style.gap = '10px';
+            
+            updateContent.querySelectorAll('button').forEach(btn => {
+                btn.style.cssText = `
+                    padding: 5px 15px;
+                    border: none;
+                    border-radius: 5px;
+                    background: white;
+                    color: #667eea;
+                    font-weight: bold;
+                    cursor: pointer;
+                `;
+            });
+            
+            document.body.appendChild(notification);
+        }
+
+        // Установка PWA
+        let deferredPrompt;
+        const installButton = document.createElement('button');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Показываем кнопку установки, если ее еще нет
+            if (!document.querySelector('.install-pwa-btn')) {
+                showInstallButton();
+            }
+        });
+
+        function showInstallButton() {
+            installButton.innerHTML = '<i class="fas fa-download"></i> Установить приложение';
+            installButton.className = 'install-pwa-btn';
+            installButton.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                border: none;
+                padding: 12px 20px;
+                border-radius: 25px;
+                font-weight: bold;
+                cursor: pointer;
+                z-index: 1000;
+                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                animation: pulse 2s infinite;
+            `;
+            
+            document.body.appendChild(installButton);
+            
+            installButton.addEventListener('click', () => {
+                installButton.style.display = 'none';
+                
+                deferredPrompt.prompt();
+                
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('Пользователь установил приложение');
+                        showNotification('Приложение успешно установлено!', 'success');
+                    } else {
+                        console.log('Пользователь отказался от установки');
+                        setTimeout(() => {
+                            installButton.style.display = 'flex';
+                        }, 3000);
+                    }
+                    deferredPrompt = null;
+                });
+            });
+        }
+
+        // Когда приложение установлено
+        window.addEventListener('appinstalled', (evt) => {
+            console.log('Приложение успешно установлено');
+            if (installButton.parentNode) {
+                installButton.parentNode.removeChild(installButton);
+            }
+            showNotification('Приложение успешно установлено!', 'success');
+        });
+
+        // Проверка режима отображения
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            console.log('Запущено как установленное приложение');
+            document.body.classList.add('standalone-mode');
+            
+            // Скрываем кнопку установки, если приложение уже установлено
+            if (installButton.parentNode) {
+                installButton.parentNode.removeChild(installButton);
+            }
+        }
+
+        // Определение типа устройства
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        if (isMobile) {
+            document.body.classList.add('mobile-device');
+        }
+
+        // Показать уведомление
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#48bb78' : '#667eea'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                z-index: 1000;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                animation: slideIn 0.3s ease;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Анимации для уведомлений
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+            @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+                100% { transform: scale(1); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Функции для переключения темы (заглушки, реализовать позже)
+        function toggleTheme() {
+            showNotification('Тёмная тема будет доступна в следующем обновлении', 'info');
+        }
+
+        function exportData() {
+            showNotification('Экспорт данных будет доступен в следующем обновлении', 'info');
+        }
+
+        // Навигация по месяцам (заглушка)
+        function changeMonth(direction) {
+            showNotification('Вечный календарь будет доступен в следующем обновлении', 'info');
+        }
+    </script>
 </body>
 </html>
