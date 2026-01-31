@@ -4,38 +4,37 @@ const brigadeData = {
     totalHours: "161.1",
     
     schedule: [
-
         { day: 1, yavka: "135" },
-        { day: 2, yavka: "", isWeekend: true },  // выходной
-        { day: 3, yavka: "", isWeekend: true },  // выходной
-        { day: 4, yavka: "", isWeekend: true },  // выходной
+        { day: 2, yavka: "", isWeekend: true },
+        { day: 3, yavka: "", isWeekend: true },
+        { day: 4, yavka: "", isWeekend: true },
         { day: 5, yavka: "129" },
         { day: 6, yavka: "112" },
         
         { day: 7, yavka: "126" },
         { day: 8, yavka: "132" },
         { day: 9, yavka: "103" },
-        { day: 10, yavka: "", isWeekend: true },  // выходной
-        { day: 11, yavka: "", isWeekend: true },  // выходной
+        { day: 10, yavka: "", isWeekend: true },
+        { day: 11, yavka: "", isWeekend: true },
         { day: 12, yavka: "130" },
         { day: 13, yavka: "151" },
         
-        { day: 14, yavka: "117" },  // Новая явка
+        { day: 14, yavka: "117" },
         { day: 15, yavka: "156" },
         { day: 16, yavka: "137" },
-        { day: 17, yavka: "", isWeekend: true },  // выходной
-        { day: 18, yavka: "", isWeekend: true },  // выходной
+        { day: 17, yavka: "", isWeekend: true },
+        { day: 18, yavka: "", isWeekend: true },
         { day: 19, yavka: "124" },
         { day: 20, yavka: "160" },
         
-        { day: 21, yavka: "", isWeekend: true },  // выходной
+        { day: 21, yavka: "", isWeekend: true },
         { day: 22, yavka: "167" },
         { day: 23, yavka: "122" },
-        { day: 24, yavka: "", isWeekend: true },  // выходной
-        { day: 25, yavka: "", isWeekend: true },  // выходной
+        { day: 24, yavka: "", isWeekend: true },
+        { day: 25, yavka: "", isWeekend: true },
         { day: 26, yavka: "102" },
         { day: 27, yavka: "113" },
-        { day: 28, yavka: "" }  // пустое поле (не выходной и не рабочий)
+        { day: 28, yavka: "" }
     ]
 };
 
@@ -75,7 +74,7 @@ const yavkaDatabase = {
         изПодПоезда: "",
         номерПоездов: "725-726 (ЭПМ 5 вагонов)"
     },
-
+    
     "132": {
         number: "132",
         time: "17.08 Депо",
@@ -84,7 +83,7 @@ const yavkaDatabase = {
         изПодПоезда: "",
         номерПоездов: "876 (ЭПР 4 вагона)<br>Отдых Мозырь"
     },
-
+    
     "103": {
         number: "103",
         time: "4.43 Мозырь",
@@ -156,7 +155,7 @@ const yavkaDatabase = {
         изПодПоезда: "865",
         номерПоездов: "756-755 (ЭПР 5 вагонов)"
     },
-
+    
     "167": {
         number: "167",
         time: "8.17 Депо",
@@ -165,7 +164,7 @@ const yavkaDatabase = {
         изПодПоезда: "",
         номерПоездов: "727-728 (ЭПМ 5+5)"
     },
-
+    
     "122": {
         number: "122",
         time: "12.32",
@@ -174,7 +173,7 @@ const yavkaDatabase = {
         изПодПоезда: "Из депо",
         номерПоездов: "874-873 (ЭПР 4 вагона)"
     },
-
+    
     "102": {
         number: "102",
         time: "3.07 Депо",
@@ -183,13 +182,13 @@ const yavkaDatabase = {
         изПодПоезда: "",
         номерПоездов: "6036-6035, 6075-6076,<br>6085-6086"
     },
-
+    
     "113": {
         number: "113",
         time: "7.10",
         сдача: "17.50",
         рабочееВремя: "10.40",
         изПодПоезда: "6047",
-        номерПоездов: "6073-6074, 6040-6039,<br>6042-6041, 6091-6092"
-    },
+        номерПоездов: "6073-6074,<br>6040-6039,<br>6042-6041,<br>6091-6092"
+    }
 };
