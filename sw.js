@@ -1,13 +1,12 @@
-// Имя кэша
-const CACHE_NAME = 'schedule-cache-v1.0';
-
-// Файлы для кэширования
+// Имя кэша с версией - при изменении версии браузер обновит файлы
+const CACHE_NAME = 'schedule-app-v1.0.1';
 const urlsToCache = [
   '/grafik/',
   '/grafik/index.html',
   '/grafik/style.css',
   '/grafik/script.js',
   '/grafik/data.js',
+  '/grafik/manifest.json',
   '/grafik/icons/icon-192x192.png',
   '/grafik/icons/icon-512x512.png',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'
@@ -15,91 +14,87 @@ const urlsToCache = [
 
 // Установка Service Worker
 self.addEventListener('install', event => {
+  console.log('Service Worker: Установка...');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('Кэш открыт');
+        console.log('Service Worker: Кэширование файлов...');
         return cache.addAll(urlsToCache);
+      })
+      .then(() => {
+        console.log('Service Worker: Установка завершена');
+        // Активируем сразу, не ждём перезагрузки
+        return self.skipWaiting();
       })
   );
 });
 
-// Активация и очистка старых кэшей
+// Активация
 self.addEventListener('activate', event => {
+  console.log('Service Worker: Активация...');
+  
   event.waitUntil(
+    // Удаляем старые кэши
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
           if (cacheName !== CACHE_NAME) {
-            console.log('Удаляем старый кэш:', cacheName);
+            console.log('Service Worker: Удаление старого кэша:', cacheName);
             return caches.delete(cacheName);
           }
         })
       );
     })
+    .then(() => {
+      console.log('Service Worker: Активация завершена');
+      // Берём под контроль все клиенты
+      return self.clients.claim();
+    })
   );
 });
 
-// Перехват запросов
+// Перехват запросов - СТРАТЕГИЯ: СЕТЬ ПРИОРИТЕТНЕЕ
 self.addEventListener('fetch', event => {
+  // Не кэшируем запросы к API и динамические данные
+  if (event.request.url.includes('/api/') || event.request.method !== 'GET') {
+    return;
+  }
+  
   event.respondWith(
-    caches.match(event.request)
+    fetch(event.request)
       .then(response => {
-        // Если файл есть в кэше, возвращаем его
-        if (response) {
-          return response;
+        // Если получили ответ, кэшируем его
+        if (response && response.status === 200) {
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, responseClone);
+          });
         }
-        
-        // Иначе загружаем из сети
-        return fetch(event.request)
-          .then(response => {
-            // Проверяем валидность ответа
-            if (!response || response.status !== 200 || response.type !== 'basic') {
-              return response;
+        return response;
+      })
+      .catch(() => {
+        // Если сети нет, пытаемся взять из кэша
+        return caches.match(event.request)
+          .then(cachedResponse => {
+            if (cachedResponse) {
+              return cachedResponse;
             }
-            
-            // Клонируем ответ
-            const responseToCache = response.clone();
-            
-            // Добавляем в кэш
-            caches.open(CACHE_NAME)
-              .then(cache => {
-                cache.put(event.request, responseToCache);
-              });
-            
-            return response;
-          })
-          .catch(() => {
-            // Если нет сети, можно показать fallback страницу
+            // Если нет в кэше, показываем fallback
             if (event.request.url.indexOf('.html') > -1) {
               return caches.match('/grafik/index.html');
             }
+            return new Response('Нет соединения', {
+              status: 408,
+              headers: { 'Content-Type': 'text/plain' }
+            });
           });
       })
   );
 });
 
-// Фоновая синхронизация (если понадобится позже)
-self.addEventListener('sync', event => {
-  if (event.tag === 'sync-data') {
-    console.log('Фоновая синхронизация...');
+// Получение сообщений от основного скрипта
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
   }
-});
-
-// Push-уведомления
-self.addEventListener('push', event => {
-  const options = {
-    body: event.data ? event.data.text() : 'Новое уведомление из приложения График',
-    icon: '/grafik/icons/icon-192x192.png',
-    badge: '/grafik/icons/icon-96x96.png',
-    vibrate: [100, 50, 100],
-    data: {
-      dateOfArrival: Date.now(),
-      primaryKey: 1
-    }
-  };
-  
-  event.waitUntil(
-    self.registration.showNotification('График работы', options)
-  );
 });
