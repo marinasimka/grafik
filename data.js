@@ -1,7 +1,7 @@
 const brigadeData = {
     driver: "Голубович",
     assistant: "Фофанов",
-    totalHours: "165.9+19.1",
+    totalHours: "165+11 по основному<br>19+13,5 по второму<br>ВСЕГО: 208.5",
     
     schedule: [
         { day: 1, yavka: "116" },
