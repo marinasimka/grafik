@@ -352,6 +352,12 @@ body {
     font-size: 14px;
 }
 
+/* Уменьшение текста в строке с суммой часов */
+.brigade-stats .stat-value span,
+.brigade-stats .stat-value {
+    font-size: 18px;
+}
+
 /* Адаптация для мобильных */
 @media (max-width: 768px) {
     .container {
